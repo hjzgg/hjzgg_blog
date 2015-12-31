@@ -1,0 +1,341 @@
+ueditor的配置和使用
+	1.首先在ueditor/jsp目录下找到config.json文件，就拿Image上传来说吧，
+	"imageUrlPrefix": "http://localhost:8080/HJZGG_BLOG", /* 图片访问路径前缀 */
+	 开始的时候imageUrlPrefix这个属性值是空的。
+	2.ueditor和struct2整合
+	如果项目中使用了Apache Struts2框架，将/* 过滤 ，由于该框架默认使用Apache的Commons FileUpload组件
+	和内建的FileUploadInterceptor拦截器实现文件上传，将request中的文件域封装到action中的一个File类型的属性中，并删除request中的原有文件域，
+	这样就会导致ueditor文件上传不能成功。
+	
+	解决办法：重写struct2的过滤器，对ueditor的请求不进行过滤。
+	
+	import java.io.IOException;
+
+	import javax.servlet.FilterChain;
+	import javax.servlet.ServletException;
+	import javax.servlet.ServletRequest;
+	import javax.servlet.ServletResponse;
+	import javax.servlet.http.HttpServletRequest;
+	
+	import org.apache.struts2.dispatcher.ng.filter.StrutsPrepareAndExecuteFilter;
+	
+	/**
+	 * Servlet Filter implementation class MyStrutsPrepareAndExecuteFilter
+	 */
+	
+	public class MyStrutsPrepareAndExecuteFilter extends StrutsPrepareAndExecuteFilter{
+		public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+			   HttpServletRequest req = (HttpServletRequest) request;    
+		       String url = req.getRequestURI();    
+		       if (url.contains("/ueditor/jsp/controller.jsp")) {//ueditor的不过滤
+		           chain.doFilter(request, response);    
+		       }else{    
+		           super.doFilter(request, response, chain);    
+		       }    
+		}
+	}
+	注意：只是重写StrutsPrepareAndExecuteFilter的doFilter方法，不要重写其他的，否则可能会出错。
+	
+	3.ueditor的初始化细节
+	实例化编辑器， 建议使用工厂方法getEditor创建和引用编辑器实例，如果在某个闭包下引用该编辑器，直接调用UE.getEditor('editor')就能拿到相关的实例
+    var ue = UE.getEditor('editor'), 我们可以找到函数的原型中还有一个参数，就是用来初始化ueditor的属性的。
+    
+	UE.getEditor = function (id, opt) {
+        var editor = instances[id];
+        if (!editor) {
+            editor = instances[id] = new UE.ui.Editor(opt);
+            editor.render(id);
+        }
+        return editor;
+    };
+    
+   	例如：var ue = UE.getEditor('editor', {initialFrameHeight:340,initialFrameWidth:760,maximumWords:1000,autoHeightEnabled:false});
+   	我们定义了初始高度、初始宽度、最大输入字数，不允许自动增高（尤其是最后这个，当你放入很大的图片后，编辑框总是会变得很高）
+    
+   	如果我没有设置autoHeightEnabled:false这个参数的话效果是这样的（编辑框一直在升高）
+   	
+   	4.解决ueditor上传图片 图片属性title的内容
+   	看你引用的是ueditor.all.js还是ueditor.all.min.js, 到相应的文件ctrl+F，寻找“loader.setAttribute('title', json.title || '')”,
+   	然后自己可以设置title的值。具体函数如下。
+   	function callback(){
+        try{
+            var link, json, loader,
+                body = (iframe.contentDocument || iframe.contentWindow.document).body,
+                result = body.innerText || body.textContent || '';
+            json = (new Function("return " + result))();
+            link = me.options.imageUrlPrefix + json.url;
+            if(json.state == 'SUCCESS' && json.url) {
+                loader = me.document.getElementById(loadingId);
+                loader.setAttribute('src', link);
+                loader.setAttribute('_src', link);
+                //loader.setAttribute('title', json.title || '');
+                loader.setAttribute('title', 'hjzgg-blog');
+                loader.setAttribute('alt', json.original || '');
+                loader.removeAttribute('id');
+                domUtils.removeClasses(loader, 'loadingclass');
+            } else {
+                showErrorLoader && showErrorLoader(json.state);
+            }
+        }catch(er){
+            showErrorLoader && showErrorLoader(me.getLang('simpleupload.loadError'));
+        }
+        form.reset();
+        domUtils.un(iframe, 'load', callback);
+    }
+    
+    5.Action不存在处理情况以及页面不存在处理情况
+      Action不存在处理情况：
+	  	  默认Action和默认处理类
+		 都配置在<package>元素下；
+		 默认Action是指当全部的action不匹配时，执行此action；
+		 默认处理类是指如果不指定class属性时的处理类，如果不指定，则是ActionSupport；
+		 语法分别如下：
+	 	<default-action-ref name="actionName">
+	 	<default-class-ref class="Action"/>
+	 	例如：
+	 	<default-action-ref name="actionNotFound"></default-action-ref>  写在 <global-results>上面
+	 	
+	    <action name="actionNotFound" class="com.opensymphony.xwork2.ActionSupport"> 写在 <global-results>下面
+   	 		<result>/xx.jsp</result>
+ 		</action>
+	      页面不存在时处理情况：
+        <global-results>
+      		<result>/404/index.html</result>
+	    </global-results>
+    
+	6.简单的hibernate多对多的测试
+	public BlogGroup get_test(int id){
+    	BlogGroup blogGroup = null;
+    	Session session = null;
+    	Transaction tran = null;
+    	try{
+			session = this.getSession();
+			tran = session.beginTransaction();
+			blogGroup = (BlogGroup)session.get(BlogGroup.class, id);
+			tran.commit();
+    	} catch(Exception e){
+    		System.out.println(e.toString());
+    		tran.rollback();
+    	}
+    	return blogGroup;
+    }
+    
+	public void insert_test1(){
+    	Session session = null;
+    	Transaction tran = null;
+    	try{
+			session = this.getSession();
+			tran = session.beginTransaction();
+			BlogGroup blogGroup = new BlogGroup();
+			blogGroup.setGroupName("html");
+			session.save(blogGroup);
+			tran.commit();
+    	} catch(Exception e){
+    		System.out.println(e.toString());
+    		tran.rollback();
+    	}
+    }
+    
+    public void insert_test2(){
+    	Session session = null;
+    	Transaction tran = null;
+    	try{
+			session = this.getSession();
+			tran = session.beginTransaction();
+			BlogGroup blogGroup = new BlogGroup();
+			blogGroup.setGroupName("c++");
+			BlogMessage blogMessage = new BlogMessage();
+			blogMessage.setMsgContent("c++ primer");
+			session.save(blogMessage);
+			Set<BlogMessage> message = new HashSet<BlogMessage>();
+			message.add(blogMessage);
+			blogGroup.setMessage(message);
+			session.save(blogGroup);
+			tran.commit();
+    	} catch(Exception e){
+    		System.out.println(e.toString());
+    		tran.rollback();
+    	}
+    }
+    
+    public void insert_test3(){
+    	Session session = null;
+    	Transaction tran = null;
+    	try{
+			session = this.getSession();
+			tran = session.beginTransaction();
+			BlogGroup blogGroup = new BlogGroup();
+			blogGroup.setGroupName("javaee");
+			BlogMessage blogMessage = new BlogMessage();
+			blogMessage.setMsgContent("Spring+hibernate+struct");
+			blogGroup.getMessage().add(blogMessage);
+			session.persist(blogGroup);
+			tran.commit();
+    	} catch(Exception e){
+    		System.out.println(e.toString());
+    		tran.rollback();
+    	}
+    }
+    
+    public void update_test(){
+    	BlogGroup blogGroup = get_test(1);//得到blogGroup主键为1的group
+    	Session session = null;
+    	Transaction tran = null;
+    	try{
+			session = this.getSession();
+			tran = session.beginTransaction();
+			BlogMessage blogMessage = new BlogMessage();
+			blogMessage.setMsgContent("css 学习笔记");
+			blogGroup.getMessage().add(blogMessage);
+			session.merge(blogGroup);
+			tran.commit();
+    	} catch(Exception e){
+    		System.out.println(e.toString());
+    		tran.rollback();
+    	}
+    }
+    
+    public void delete_test(){
+    	BlogGroup blogGroup = get_test(1);//得到blogGroup主键为1的group
+    	Session session = null;
+    	Transaction tran = null;
+    	try{
+			session = this.getSession();
+			tran = session.beginTransaction();
+			session.delete(blogGroup);
+			tran.commit();
+    	} catch(Exception e){
+    		System.out.println(e.toString());
+    		tran.rollback();
+    	}
+    }
+    7.html纯文本的获得
+    Whitelist whiteList = new Whitelist();
+	String articleSummary = Jsoup.clean(blogArticleForm.getArticleContent(), whiteList.none());//获取纯文本
+	articleSummary = articleSummary.replaceAll("&nbsp;", " ");
+	articleSummary = articleSummary.replaceAll("\\s+", " ");
+	
+	8.延迟加载问题
+	（1）OpenSessionInViewFilter：用来把一个Hibernate Session和一次完整的请求过程对应的线程相绑定。目的是为了实现"Open Session in View"的模式。例如： 它允许在事务提交之后延迟加载显示所需要的对象。
+	（2）S2SH整合是出现OpenSessionInViewFilter失效的问题，解决方案1：http://blog.csdn.net/duck_arrow/article/details/43019663
+											     解决方案2：在事务提交之前，如果对象obj有关联的对象是延迟加载的，那么可以通过Hibernate.initialize(obj.getxxx());来获得代理对象
+	（3）另一个和OpenSessionInViewFilter作用差不多的还有 opensessioninviewinterceptor。
+	
+	9.防止表单的重复提交
+	（1）structs2的拦截器（基于Token（令牌））token 和 tokenSession
+		参考：http://blog.csdn.net/shijiebei2009/article/details/42677737
+	（2）URL的重定向，将request对象冲刷掉，换成新的request
+	
+	10.structs中，获得request对象 ServletActionContext.getRequest()
+				  获得session对象 ActionContext.getContext().getSession()
+	
+	11.<%@include file="" %> 和 <jsp:include src=""/>加载html出现中文乱码问题时，将被加载的html页面中的utf-8换成gbk。
+	
+	12.级联操作：persist时主控方和被控方都可以是transient状态， 但是merge时，主控方是persist的，被控方也要是persist的。
+	
+	13.地址栏输入：http://localhost:8080/HJZGG_BLOG/pictureAction!pictureGroupJspGetAllGroups
+		System.out.println(ServletActionContext.getServletContext().getRealPath("/"));
+		System.out.println(ServletActionContext.getRequest().getServletPath());
+		System.out.println(ServletActionContext.getRequest().getRequestURL());
+		System.out.println(ServletActionContext.getRequest().getRequestURI());
+		
+	    打印的结果如下：
+	    F:\eclipseEE_workspace\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\HJZGG_BLOG\savePath
+		/pictureAction!pictureGroupJspGetAllGroups
+		http://localhost:8080/HJZGG_BLOG/pictureAction!pictureGroupJspGetAllGroups
+		/HJZGG_BLOG/pictureAction!pictureGroupJspGetAllGroups
+		
+	14.Action得到完整的URL请求
+	     访问：http://localhost:8080/HJZGG_BLOG/pictureAction!pictureGroupJspGetAllGroups
+	     
+		 HttpServletRequest request = ServletActionContext.getRequest();
+		 String  url  =  null;
+		 url = request.getScheme()+"://" //请求协议 http 或 https    
+		 + request.getServerName() //服务器地址  
+         + ":"   
+         + request.getServerPort()           //端口号  
+         + request.getContextPath()      //项目名称  
+         + request.getServletPath()      //请求页面或其他地址 ,例如：pictureAction!pictureGroupJspGetAllGroups
+         + "?" + (request.getQueryString()); //参数  
+		 System. out.println(url);    
+		  输出：http://localhost:8080/HJZGG_BLOG/pictureAction!pictureGroupJspGetAllGroups?null
+		 
+	 15.得到项目根目录的URL
+	 	 HttpServletRequest request = ServletActionContext.getRequest();
+		 String  url  =  null;
+		 url = request.getScheme()+"://" //请求协议 http 或 https    
+		 + request.getServerName() //服务器地址  
+         + ":"   
+         + request.getServerPort()           //端口号  
+         + request.getContextPath();      //项目名称  
+		 System. out.println(url);   
+		 输出：http://localhost:8080/HJZGG_BLOG 
+		 
+	16. zyUpload 配合Strus2实现图片或文件的上传
+		（1）zyFile.js，lanrenzhijia.js，zyUpload.js设置   url : "fileUploadAction!execute", // 上传文件的路径
+		（2）文件的上传通过 zyFile.js中的funUploadFile函数，修改formdata.append("upload", file) file对应的name属性值，保证和后台的name属性值一样！
+		（3）缺陷就是只能单个文件上传！用的是FormData对象！
+		（4）zyFile.js中的一些接口都是在zyUpload.js中实现！
+		（5）zyFile.js filterFile给外部提供的函数接口在 zyUpload.js可以找到，然后自己可以更改，进行文件的过滤！
+		
+	17.Spring 和 Struct2常见的两种整合策略
+		（1）通过ref
+			structs.xml中 ，
+			   <constant name="struts.objectFactory" value="spring" />  
+			   ...
+			   <action name="fileUploadAction" class="fileUploadAction" method="struts-default">
+					<param name="savePath">/fileUpload</param>
+					<result name="errors" type="redirect">/errorsMessage/fileErrorsTip.jsp</result>
+					<result name="operations" type="redirect">/operationsMessage/fileOperationsTip.jsp</result>
+			   </action>
+			   
+		   applicationContext.xml中，
+			   <bean id="fileUploadAction" class="com.blog.action.FileUploadAction" scope="prototype">
+			  		<property name="pictureDao" ref="pictureDao"/>
+			  </bean>
+		（2）自动装配
+				参考：http://www.cnblogs.com/taoxiaoji/archive/2011/03/12/Two_ways_to_integrate_Struts2_and_Spring.html
+				业务逻辑控制器类中引用的业务类不需要自己去初始化，Struts2的Spring插件会使用bean的自动装配将业务类注入进来，其实业务逻辑控制器
+			也不是Struts2创建的，而是Struts2的Spring插件创建的。默认情况下，插件使用by name的方式装配，可以通过增加Struts2常量来
+			修改匹配方式：设置方式为：struts.objectFactory.spring.autoWire = typeName，可选的装配参数如下：
+				a) name：等价于Spring配置中的autowire=”byName”，这是缺值。
+				b) type：等价于Spring配置中的autowire=”byType”。
+				c)auto：等价于Spring配置中的autowire=”autodetect”。
+				d)constructor：等价于Spring配置中的autowire=” constructor”。
+		     
+		     方式（1）中的Action对应的bean中如果没有scope="prototype"，那么就Action就是采用的单例模式，那么在多并发的情况下会出错， 如FileUploadAction, 多文件的上传（每个文件都要请求这个action，文件名就会冲突并覆盖）
+		     方式（2）每个请求对应一个action。
+		     
+		 18.详解Spring中bean的scope singleton prototype request...
+
+			<bean id="role" class="spring.chapter2.maryGame.Role" scope="singleton"/>
+			‍这里的scope就是用来配置spring bean的作用域，它标识bean的作用域。在spring2.0之前bean只有2种作用域即：singleton(单例)、non-singleton（也称prototype）, Spring2.0以后，增加了session、request、global session三种专用于Web应用程序上下文的Bean。因此，默认情况下Spring2.0现在有五种类型的Bean。当然，Spring2.0对Bean的类型的设计进行了重构，并设计出灵活的Bean类型支持，理论上可以有无数多种类型的Bean，用户可以根据自己的需要，增加新的Bean类型，满足实际应用需求。!
+			‍1、singleton作用域
+			‍‍当一个bean的作用域设置为singleton, 那么Spring IOC容器中只会存在一个共享的bean实例，并且所有对bean的请求，只要id与该bean定义相匹配，则只会返回bean的同一实例。换言之，当把一个bean定义设置为singleton作用域时，Spring IOC容器只会创建该bean定义的唯一实例。这个单一实例会被存储到单例缓存（singleton cache）中，并且所有针对该bean的后续请求和引用都将返回被缓存的对象实例，这里要注意的是singleton作用域和GOF设计模式中的单例是完全不同的，单例设计模式表示一个ClassLoader中只有一个class存在，而这里的singleton则表示一个容器对应一个bean，也就是说当一个bean被标识为singleton时候，spring的IOC容器中只会存在一个该bean。
+			‍配置实例：
+			‍<bean id="role" class="spring.chapter2.maryGame.Role" scope="singleton"/>
+			‍或者
+			<bean id="role" class="spring.chapter2.maryGame.Role" singleton="true"/>  
+			‍2、prototype
+			‍prototype作用域部署的bean，每一次请求（将其注入到另一个bean中，或者以程序的方式调用容器的getBean()方法）都会产生一个新的bean实例，相当与一个new的操作，对于prototype作用域的bean，有一点非常重要，那就是Spring不能对一个prototype bean的整个生命周期负责，容器在初始化、配置、装饰或者是装配完一个prototype实例后，将它交给客户端，随后就对该prototype实例不闻不问了。不管何种作用域，容器都会调用所有对象的初始化生命周期回调方法，而对prototype而言，任何配置好的析构生命周期回调方法都将不会被调用。清除prototype作用域的对象并释放任何prototype bean所持有的昂贵资源，都是客户端代码的职责。（让Spring容器释放被singleton作用域bean占用资源的一种可行方式是，通过使用bean的后置处理器，该处理器持有要被清除的bean的引用。）
+			‍3、request
+			‍request表示该针对每一次HTTP请求都会产生一个新的bean，同时该bean仅在当前HTTP request内有效，配置实例： request、session、global session使用的时候首先要在初始化web的web.xml中做如下配置：如果你使用的是Servlet 2.4及以上的web容器，那么你仅需要在web应用的XML声明文件web.xml中增加下述ContextListener即可:
+			‍<listener>
+			   <listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>
+			</listener>
+			‍4、session
+			‍session作用域表示该针对每一次HTTP请求都会产生一个新的bean，同时该bean仅在当前HTTP session内有效
+			‍5、global session
+			‍global session作用域类似于标准的HTTP Session作用域，不过它仅仅在基于portlet的web应用中才有意义。Portlet规范定义了全局Session的概念，它被所有构成某个portlet web应用的各种不同的portlet所共享。在global session作用域中定义的bean被限定于全局portlet Session的生命周期范围内。如果你在web中使用global session作用域来标识bean，那么web会自动当成session类型来使用
+			‍6、自定义bean装配作用域在spring2.0中作用域是可以任意扩展的，你可以自定义作用域，甚至你也可以重新定义已有的作用域（但是你不能覆盖singleton和prototype），spring的作用域由接口org.springframework.beans.factory.con**.Scope来定义，自定义自己的作用域只要实现该接口即可
+			再议singleton与prototype：
+			‍scope="prototype"没写的问题,项目中对一个表的增删该操作是用一个action，这个 actionadd,update,delete,save这些方法， 添加和修改是共用一个页面，当页面得到id时代表进行的修改操作，反之是添加操作。因为在配置spring的bean是忘了写 scope="prototype" 所以每次添加时都显示最后一次访问过的记录,scope="prototype" 会在该类型的对象被请求 时创建一个新的action对象。如果没有配置scope=prototype则添加的时候不会新建一个action，他任然会保留上次访问的过记录的信息 webwork的Action不是线程安全的，要求在多线程环境下必须是一个线程对应一个独立的实例，不能使用 singleton。所以，我们在Spring配置Webwork Action Bean时，需要加上属性scope=”prototype”或singleton=”false”。 
+			singleton模式指的是对某个对象的完全共享，包括代码空间和数据空间，说白了，如果一个类是singleton的，假如这个类有成员变量，那么这个成员变量的值是各个线程共享的（有点类似于static的样子了），当线程A往给变量赋了一个值以后，线程B就能读出这个值。因此，对于前台Action，肯定不能使用singleton的模式，必须是一个线程请求对应一个独立的实例。推而广之，只要是带数据成员变量的类，为了防止多个线程混用数据，就不能使用singleton。对于我们用到的Service、Dao，之所以用了singleton，就是因为他们没有用到数据成员变量，如果谁的 Service需要数据成员变量，请设置singleton=false。 有状态的bean都使用Prototype作用域，而对无状态的bean则应该使用singleton作用域。
+			 在 Spring2.0中除了以前的Singleton和Prototype外又加入了三个新的web作用域，分别为request、session和 global session。如果你希望容器里的某个bean拥有其中某种新的web作用域，除了在bean级上配置相应的scope属性，还必须在容器级做一个额外的初始化配置。即在web应用的web.xml中增加这么一个ContextListener： org.springframework.web.context.request.RequestContextListener 以上是针对Servlet 2.4以后的版本。比如Request作用域。
+			 
+		19.div中图片水平垂直居中的方法
+		  <div style="display: table; width: 580px; height:380px; text-align: center;">
+		  	 <div style="display: table-cell; vertical-align: middle;">
+	      	 	<img src="" alt="" style="max-height: 380px; max-width: 580px;">
+			  </div>						      	 	
+	      </div>

@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<beans xmlns="http://www.springframework.org/schema/beans"  
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  
+  xmlns:aop="http://www.springframework.org/schema/aop"  
+  xmlns:tx="http://www.springframework.org/schema/tx"  
+  xsi:schemaLocation="  
+	  http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd  
+	  http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.5.xsd  
+	  http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd">
+  
+  <!-- datasource -->
+  <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+    <property name="driverClassName" value="com.mysql.jdbc.Driver" />
+    <property name="url" value="jdbc:mysql://localhost:3306/hjzgg_blog?characterEncoding=UTF-8" />
+    <property name="username" value="root" />
+    <property name="password" value="hjzgg5211314" />
+  </bean>
+  <!-- spring与hibernate整合 
+  spring来管理session的创建、打开和关闭
+  -->
+  <bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+  		<!-- 依赖注入数据源，正式上下文定义的dataSource -->
+	    <property name="dataSource" ref="dataSource" />
+	    
+	    <property name="hibernateProperties">
+	    	<value>
+	            hibernate.dialect=org.hibernate.dialect.MySQL5Dialect
+	            hibernate.hbm2ddl.auto=update
+	            hibernate.show_sql=true
+	            hibernate.format_sql=true
+	            hibernate.cache.use_second_level_cache=true
+	            hibernate.cache.use_query_cache=false
+	            hibernate.cache.provider_class=org.hibernate.cache.EhCacheProvider
+	            hibernate.current_session_context_class=thread
+	        </value>
+	   </property>
+	   
+	    <!--Spring中： 包扫描的方式加载注解类 -->
+        <property name="annotatedClasses">
+            <list>
+                <value>com.blog.entriy.BlogGroup</value>
+                <value>com.blog.entriy.BlogArticle</value>
+                <value>com.blog.entriy.ArticleComment</value>
+                <value>com.blog.entriy.ContactMe</value>
+                <value>com.blog.entriy.LeaveWord</value>
+                <value>com.blog.entriy.MyPicture</value>
+                <value>com.blog.entriy.PictureComment</value>
+                <value>com.blog.entriy.PictureGroup</value>
+            </list>
+        </property>	
+	   
+	   <!--Hibernate的*.properties或者*.XML文件中：  罗列所有的持久类的类名
+	    	<hibernate-configuration> 
+			     <session-factory> 
+			     	...
+			　　　　　　<mapping class="com.blog.entriy.BlogGroup"/>
+			　　　　　　<mapping class="com.blog.entriy.BlogMessage"/>
+			　　　　　	...
+			     </session-factory> 
+			 </hibernate-configuration> 
+	    -->
+	   
+	   <!--  通过配置文件的方式获取数据源 (这个项目不这样搞了 PO = POJO+持久化注解)
+	    <property name="mappingResources">
+	    	<list>
+	    	   以下用来列出所有的PO映射文件
+		        <value>publishparty.cfg.xml</value>
+	    	</list>
+	    </property>	    -->
+	    
+  </bean>
+  
+  <bean id="actionNotFound" class="com.opensymphony.xwork2.ActionSupport"></bean>
+  
+  <bean id="blogDao" class="com.blog.dao.BlogDao">
+		<property name="sessionFactory" ref="sessionFactory"/>
+  </bean>
+  <bean id="blogAction" class="com.blog.action.BlogAction" scope="prototype">
+  		<property name="blogDao" ref="blogDao"/>
+  		<property name="pictureDao" ref="pictureDao"/>
+  </bean>
+  
+  <bean id="messageDao" class="com.blog.dao.MessageDao">
+		<property name="sessionFactory" ref="sessionFactory"/>
+  </bean>
+  <bean id="messageAction" class="com.blog.action.MessageAction" scope="prototype">
+  		<property name="messageDao" ref="messageDao"/>
+  </bean>
+  
+  <bean id="pictureDao" class="com.blog.dao.PictureDao">
+    	<property name="sessionFactory" ref="sessionFactory"/>
+  </bean>
+  <bean id="pictureAction" class="com.blog.action.PictureAction" scope="prototype">
+  		<property name="pictureDao" ref="pictureDao"/>
+  		<property name="blogDao" ref="blogDao"/>
+  </bean>
+  
+  <bean id="fileUploadAction" class="com.blog.action.FileUploadAction" scope="prototype">
+  		<property name="pictureDao" ref="pictureDao"/>
+  </bean>
+</beans>

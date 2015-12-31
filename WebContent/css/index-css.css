@@ -1,0 +1,104 @@
+body{
+	background: url('../image/huaqiangu4.jpg') no-repeat top center fixed;
+    min-width:1200px;
+}
+.container{
+	background-color: #939191;
+	filter:alpha(opacity=90); 
+	-moz-opacity:0.90; 
+	opacity:0.90;
+}
+
+.blog-img{
+	height: 100px;
+	width: 100px;
+	float: right;
+}
+
+.blog-menu{
+	background-color: black;
+}
+
+.blog-menu li a{
+	color: white;
+}
+
+.blog_nav li:hover{
+	background-color: #0f0f0f ;
+}
+
+.navbar-header:hover{
+	background-color: #0f0f0f ;
+}
+
+.catListTitle {
+    font-size: 18px;
+    padding: 10px 20px;
+    background-color: #3c3c3c;
+    color: #fff;
+    font-weight: normal;
+    border: 1px solid #3c3c3c;
+    margin-top: 40px;
+    transition: all 0.4s linear 0s;
+}
+
+.blog-footer{
+	font-size: 18px;
+    padding: 10px 20px;
+    background-color: #3c3c3c;
+    color: #fff;
+    font-weight: normal;
+    border: 1px solid #3c3c3c;
+    text-align: center;
+}
+
+.catListTitle:hover{
+	padding-left: 50px;
+	cursor: pointer;
+}
+
+.blog-panel{
+	margin-top: 40px;
+}
+
+.blog-panel-heading{
+	background-image: linear-gradient(to bottom,#3c3c3c 0,#222 100%);
+	color: #FEFEFE;
+    border-color: #D8D7D7;
+    padding: 10px 15px;
+    border-bottom: 1px solid transparent;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+}
+
+.panel-title{
+	transition: all 0.4s linear 0s;
+}
+
+.panel-title:hover{
+	margin-left: 50px;
+	cursor: pointer;
+}
+
+.blog-icon{
+	padding-right: 10px;
+}
+
+.blog-nav{
+	text-align: center;
+}
+
+.blog-label-1{
+	margin-top:10px;
+	background-color: #eee; color:#555; border: 1px solid #ccc; padding: 6px 12px ; font-size: 14px; font-weight: 400;
+}
+
+.blog-postDesc {
+    margin: 0 30px;
+    margin-bottom: 2px;
+    padding: 8px 0px;
+    font-size: 12px;
+    color: #aaa;
+    background: #fff;
+    text-align: right;
+}

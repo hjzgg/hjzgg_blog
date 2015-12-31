@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE struts PUBLIC	 
+  "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"	 
+  "http://struts.apache.org/dtds/struts-2.0.dtd">	
+<struts>
+  <!-- 将Action的创建交给spring来管理 -->  
+  <constant name="struts.objectFactory" value="spring" />  
+  <constant name="struts.i18n.encoding" value="utf-8"/>
+  <constant name="struts.enable.DynamicMethodInvocation" value="true"/>
+  <constant name="struts.multipart.maxSize" value="100000000"/> 
+  <!-- struct2默认使用jakarta的Common-FileUpload的文件上传解析器 -->
+  <constant name="struts.multipart.parser" value="jakarta"/>
+  <!-- struts.multipart.saveDir用于指定存放临时文件的文件夹 -->
+  <constant name="struts.multipart.saveDir" value="/fileUpload/tmpFileUpload"/>
+  <package namespace="/" name="struts2" extends="struts-default">  
+    	
+	    <!-- package中的标签必须按照如下顺序配置
+	    result-types,interceptors,default-interceptor-ref,default-action-ref,default-class-ref,global-results,global-exception-mappings,action*(就是所有的action放到最后)
+	    -->
+	    <!-- 自定义拦截器 ,如果有拦截器，必须放在package标签内的第一位-->
+	    <interceptors>
+		      <interceptor name="privilegeInterceptor" class="com.blog.interceptor.PrivilegeInterceptor"></interceptor>
+		      <interceptor-stack name="myDefaultStack">
+		      		<interceptor-ref name="defaultStack"></interceptor-ref>
+			        <interceptor-ref name="privilegeInterceptor">
+			        	<!-- 指定哪个方法被拦截 -->
+			        	<param name="includeMethods">editJspGetAllGroups, updateEditJpsGetOneArticle</param>
+			        </interceptor-ref>
+		      </interceptor-stack>
+	    </interceptors>  
+	    
+	 	<!-- action不存在时 -->
+	    <default-action-ref name="actionNotFound"></default-action-ref>
+	    
+	 	<!-- 页面不存在时 -->
+	    <global-results>
+	      	<result>/404/pageNotFound.html</result>
+	    </global-results>
+	    
+	    <action name="actionNotFound" class="actionNotFound">
+     	 	<result>/404/actionNotFound.html</result>
+ 		</action>
+	    
+	    <action name="blogAction" class="blogAction" method="struts-default">
+	    	<result name="newBlogGroup" type="redirect">/operationsMessage/operationsTip.jsp</result>
+	    	<result name="editJspGetAllGroups">/edit.jsp</result>
+	    	<result name="indexJpsGetAllArticles">/index.jsp</result>
+	    	<result name="deleteJpsGetAllArticles">/delete.jsp</result>
+	    	<result name="editAllJpsGetAllArticles">/editAll.jsp</result>
+	    	<result name="deleteBlogArticle">/operationsMessage/operationsTipAjax.jsp</result>
+	    	<result name="articleJspGetOneArticle">/article.jsp</result>
+	    	<result name="groupJspGetOneGroup">/group.jsp</result>
+	    	<result name="updateEditJpsGetOneArticle">/updateEdit.jsp</result>
+	    	<result name="newBlogArticle" type="redirect">/operationsMessage/operationsTip.jsp</result>
+	    	<result name="updateBlogArticle" type="redirect">/operationsMessage/operationsTip.jsp</result>
+	    	<result name="newBlogArticleComment">/operationsMessage/operationsTipAjax.jsp</result>
+	    	<result name="articleGroupGetAllGroups">/articleGroup.jsp</result>
+	    	<result name="deleteArticleGrouop" type="redirect">/operationsMessage/operationsTipAjax.jsp</result>
+	    	<result name="articleRenameGroup" type="redirect">/operationsMessage/operationsTip.jsp</result>
+	    	<result name="errors" type="redirect">/errorsMessage/errorsTip.jsp</result>
+	    	<interceptor-ref name="myDefaultStack">
+	    		<param name="name">自定义的拦截器</param>
+	    	</interceptor-ref>
+	    </action>
+		
+		<action name="messageAction" class="messageAction" method="struts-default">
+			<result name="newLeaveWord">/operationsMessage/operationsTipAjax.jsp</result>
+			<result name="leaveWordJspGetAllWords">/leaveWord.jsp</result>
+		</action>
+		
+		<action name="pictureAction" class="pictureAction" method="struts-default">
+			<result name="newPictureGroup" type="redirect">/operationsMessage/operationsTip.jsp</result>
+			<result name="pictureRenameGroup" type="redirect">/operationsMessage/operationsTip.jsp</result>
+			<result name="pictureGroupJspGetAllGroups">/pictureGroup.jsp</result>
+			<result name="pictureJspGetOneGroup">/picture.jsp</result>
+			<result name="deletePictureGrouop" type="redirect">/operationsMessage/operationsTipAjax.jsp</result>
+			<result name="errors" type="redirect">/errorsMessage/errorsTipAjax.jsp</result>
+			<result name="errors_x" type="redirect">/errorsMessage/errorsTip.jsp</result>
+		</action>
+		
+		<action name="fileUploadAction" class="fileUploadAction" method="struts-default">
+			<param name="savePath">/fileUpload</param>
+			<result name="errors" type="redirect">/errorsMessage/fileErrorsTip.jsp</result>
+			<result name="operations" type="redirect">/operationsMessage/fileOperationsTip.jsp</result>
+		</action>
+  </package>
+</struts>
