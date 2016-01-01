@@ -56,27 +56,40 @@
 				  <!-- Default panel contents -->
 				  <div class="blog-panel-heading">欢迎和hjzgg交流</div>
 				  <!-- List group -->
-				  <ul class="list-group">
-				    <li class="list-group-item">
-						<div class="input-group">
-						  <span class="input-group-addon" id="basic-addon1">姓名:</span>
-						  <input type="text" class="form-control" placeholder="userName" name="userName" aria-describedby="basic-addon1">
-						</div>
-					</li>
-					
-				    <li class="list-group-item">
-				    	<div class="input-group">
-						  <span class="input-group-addon" id="basic-addon2">电话:</span>
-						  <input type="text" class="form-control" placeholder="phone" name="phone" aria-describedby="basic-addon1">
-						</div>
-				    </li>
-				    
-				    <li class="list-group-item" style="padding-top: 20px;">
-				    	<span class="label label-default blog-label-1">消息:</span>
-				    	<br><br>
-						<textarea rows="10" style="width:100%" name="message" placeholder="请输入消息（不要超过500个字符）"></textarea>
-				    </li>
-				  </ul>
+				  <form action="mailAction!sendMail" method="post" name="mailForm" id="mailFormId">
+					  <ul class="list-group">
+					    <li class="list-group-item">
+							<div class="input-group">
+							  <span class="input-group-addon" id="basic-addon1">姓名:</span>
+							  <input type="text" class="form-control" placeholder="your name" name="mailForm.name" aria-describedby="basic-addon1">
+							</div>
+						</li>
+						
+					    <li class="list-group-item">
+					    	<div class="input-group">
+							  <span class="input-group-addon" id="basic-addon2">电话:</span>
+							  <input type="text" class="form-control" placeholder="your phone" name="mailForm.phone" aria-describedby="basic-addon1">
+							</div>
+					    </li>
+					    
+					    <li class="list-group-item">
+					    	<div class="input-group">
+							  <span class="input-group-addon" id="basic-addon2">邮件:</span>
+							  <input type="text" class="form-control" placeholder="your e-mail" name="mailForm.e_mail" aria-describedby="basic-addon1">
+							</div>
+					    </li>
+					    
+					    <li class="list-group-item" style="padding-top: 20px;">
+					    	<span class="label label-default blog-label-1">消息:</span>
+					    	<br><br>
+							<textarea rows="10" style="width:100%" name="mailForm.content" placeholder="请输入消息（不要超过500个字符）"></textarea>
+					    </li>
+					    
+					     <li class="list-group-item">
+				    		 <center><button onclick="$('#mailFormId').submit();" type="button" class="btn btn-success">发送邮件</button></center>
+					     </li>
+					  </ul>
+					</form>
 				</div>
 		  </div>
 		</div>

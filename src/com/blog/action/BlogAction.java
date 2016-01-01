@@ -15,7 +15,6 @@ import com.blog.dao.PictureDao;
 import com.blog.entriy.ArticleComment;
 import com.blog.entriy.BlogArticle;
 import com.blog.entriy.BlogGroup;
-import com.blog.entriy.MyPicture;
 import com.blog.entriy.PictureGroup;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
@@ -396,5 +395,41 @@ public class BlogAction extends ActionSupport{
 			return "errors";
 		}
 		return "groupJspGetOneGroup";
+	}
+	
+	public String articleTitle;
+	public String getArticleTitle() {
+		return articleTitle;
+	}
+	public void setArticleTitle(String articleTitle) {
+		this.articleTitle = articleTitle;
+	}
+	
+	public String searchArticles(){
+		List<BlogGroup> listg = null;
+		List<PictureGroup> listgg = null;
+		List<BlogArticle> list = null;
+		try{
+			if(articleTitle != null)
+				ActionContext.getContext().getSession().put("articleTitle", articleTitle);
+			else
+				articleTitle = (String)ActionContext.getContext().getSession().get("articleTitle");
+			list = blogDao.searchArticles(articleTitle);
+			if(list == null){
+				ActionContext.getContext().getSession().put("errors", "搜索失败, 没有想要的结果!");
+				return "errors";
+			}
+			listg = blogDao.someJspGetAllBlogGroup();
+			if(listg == null) throw new NullPointerException();
+			listgg = pictureDao.pictureGroupJspGetAllGroups();
+			if(listgg == null) throw new NullPointerException();
+			ActionContext.getContext().getSession().put("searchArticles", list);
+			ActionContext.getContext().getSession().put("someJspGetAllBlogGroup", listg);
+			ActionContext.getContext().getSession().put("pictureGroupJspGetAllGroups", listgg);
+		} catch (Exception e){
+			ActionContext.getContext().getSession().put("errors", "搜索文章失败: "+e.toString()+" 异常位置：blogAction!searchArticles。");
+			return "errors";
+		}
+		return "searchArticles";
 	}
 }

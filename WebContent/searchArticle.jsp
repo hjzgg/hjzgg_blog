@@ -11,7 +11,7 @@
 <!-- 为了确保适当的绘制和触屏缩放，需要在 <head> 之中添加 viewport 元数据标签。 -->
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<title>胡峻峥的博客</title>
+<title>文章搜索</title>
 
 <script src="js/background.js" type="text/javascript"></script>
 <!-- 鼠标周围的星星 -->
@@ -33,6 +33,9 @@
 <!-- 自定义css -->
 <link rel="stylesheet" href="css/index-css.css">
 
+<script type="text/javascript">
+	var articleTitle = ${session.articleTitle};
+</script>
 </head>
 <body>
 	<div class="container">
@@ -46,16 +49,16 @@
 		    <!-- Collect the nav links, forms, and other content for toggling -->
 		    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 		      <ul class="nav navbar-nav blog_nav">
-		        <li class="active"><a href="blogAction!indexJpsGetAllArticles">首页</a></li>
+		        <li><a href="blogAction!indexJpsGetAllArticles">首页</a></li>
 		        <li><a href="javascript:void(0)" onclick="$('#myModal').modal('show');">新随笔</a></li>
 		        <li><a href="messageAction!leaveWordJspGetAllWords">留言板</a></li>
 		        <li><a href="contact.jsp">联系</a></li>
 		        <li><a href="pictureAction!pictureGroupJspGetAllGroups">相册</a></li>
 		      </ul>
 		   
-		      <form action="blogAction!searchArticles" method="post" class="navbar-form navbar-right" role="search">
+		      <form ction="blogAction!searchArticles" method="post" class="navbar-form navbar-right" role="search">
 		        <div class="form-group">
-		          <input name="articleTitle" type="text" class="form-control" placeholder="Search">
+		          <input name="articleTitle" type="text" class="form-control" placeholder="Search" value="${session.articleTitle}">
 		        </div>
 		        <button type="submit" class="btn btn-default">文章检索</button>
 		      </form>
@@ -129,7 +132,7 @@
 		    	<%
 			    	int pageCur=0, pageBegin=0, pageTot=0, num= 0;
 				    final int pageSize = 1;//每一面显示的文章的数目
-					List<BlogArticle> articleList = (List<BlogArticle>)session.getAttribute("indexJpsGetAllArticles");
+					List<BlogArticle> articleList = (List<BlogArticle>)session.getAttribute("searchArticles");
 				    num = articleList.size();//总个数 
 				    pageTot = num%pageSize == 0 ? num/pageSize : num/pageSize+1;//总页数
 				    if(num == 0) pageTot = 0;
@@ -244,7 +247,7 @@
 </body>
 <script type="text/javascript">
 	function myGoTo(pageIndex){
-		location.href = "blogAction!indexJpsGetAllArticles?" + pageIndex;
+		location.href = "blogAction!searchArticles?" + pageIndex;
 	}
 	
 	function myDumpTo(pageTot){

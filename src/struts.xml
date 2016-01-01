@@ -40,6 +40,11 @@
 	    <action name="actionNotFound" class="actionNotFound">
      	 	<result>/404/actionNotFound.html</result>
  		</action>
+ 		
+	    <action name="mailAction" class="mailAction" method="struts-default">
+     	 	<result name="sendMail" type="redirect">/operationsMessage/operationsTip.jsp</result>
+     	 	<result name="errors" type="redirect">/errorsMessage/errorsTip.jsp</result>
+ 		</action>
 	    
 	    <action name="blogAction" class="blogAction" method="struts-default">
 	    	<result name="newBlogGroup" type="redirect">/operationsMessage/operationsTip.jsp</result>
@@ -55,6 +60,7 @@
 	    	<result name="updateBlogArticle" type="redirect">/operationsMessage/operationsTip.jsp</result>
 	    	<result name="newBlogArticleComment">/operationsMessage/operationsTipAjax.jsp</result>
 	    	<result name="articleGroupGetAllGroups">/articleGroup.jsp</result>
+	    	<result name="searchArticles">/searchArticle.jsp</result>
 	    	<result name="deleteArticleGrouop" type="redirect">/operationsMessage/operationsTipAjax.jsp</result>
 	    	<result name="articleRenameGroup" type="redirect">/operationsMessage/operationsTip.jsp</result>
 	    	<result name="errors" type="redirect">/errorsMessage/errorsTip.jsp</result>

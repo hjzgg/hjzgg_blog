@@ -41,7 +41,6 @@
                 <value>com.blog.entriy.BlogGroup</value>
                 <value>com.blog.entriy.BlogArticle</value>
                 <value>com.blog.entriy.ArticleComment</value>
-                <value>com.blog.entriy.ContactMe</value>
                 <value>com.blog.entriy.LeaveWord</value>
                 <value>com.blog.entriy.MyPicture</value>
                 <value>com.blog.entriy.PictureComment</value>
@@ -98,4 +97,7 @@
   <bean id="fileUploadAction" class="com.blog.action.FileUploadAction" scope="prototype">
   		<property name="pictureDao" ref="pictureDao"/>
   </bean>
+  
+  <bean id="mailAction" class="com.blog.action.MailAction" scope="prototype"/>
+  
 </beans>

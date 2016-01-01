@@ -55,9 +55,9 @@
 		        <li><a href="pictureAction!pictureGroupJspGetAllGroups">相册</a></li>
 		      </ul>
 		   
-		      <form class="navbar-form navbar-right" role="search">
+		      <form action="blogAction!searchArticles" method="post" class="navbar-form navbar-right" role="search">
 		        <div class="form-group">
-		          <input type="text" class="form-control" placeholder="Search">
+		          <input name="articleTitle" type="text" class="form-control" placeholder="Search">
 		        </div>
 		        <button type="submit" class="btn btn-default">文章检索</button>
 		      </form>

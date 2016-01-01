@@ -234,7 +234,7 @@ ueditor的配置和使用
 	12.级联操作：persist时主控方和被控方都可以是transient状态， 但是merge时，主控方是persist的，被控方也要是persist的。
 	
 	13.地址栏输入：http://localhost:8080/HJZGG_BLOG/pictureAction!pictureGroupJspGetAllGroups
-		System.out.println(ServletActionContext.getServletContext().getRealPath("/"));
+		System.out.println(ServletActionContext.getServletContext().getRealPath("/savePath"));
 		System.out.println(ServletActionContext.getRequest().getServletPath());
 		System.out.println(ServletActionContext.getRequest().getRequestURL());
 		System.out.println(ServletActionContext.getRequest().getRequestURI());

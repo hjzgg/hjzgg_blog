@@ -229,4 +229,21 @@ public class BlogDao implements Serializable{
     	}
     	return blogGroup;
     }
+    
+    public List<BlogArticle> searchArticles(String articleTitle){
+    	List<BlogArticle> list = null;
+    	Session session = null;
+    	Transaction tran = null;
+    	try{
+			session = this.getSession();
+			tran = session.beginTransaction();
+			list = session.createQuery("from BlogArticle where articleTitle like '%" + articleTitle +"%'").list();
+			tran.commit();
+    	} catch(Exception e){
+    		System.out.println(e.toString());
+    		tran.rollback();
+    		return null;
+    	}
+    	return list;
+    }
 }

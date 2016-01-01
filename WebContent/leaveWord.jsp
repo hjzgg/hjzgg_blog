@@ -50,7 +50,7 @@
 		        <li><a href="blogAction!indexJpsGetAllArticles">首页</a></li>
 		        <li><a href="javascript:void(0)" onclick="$('#myModal').modal('show');">新随笔</a></li>
 		        <li class="active"><a href="messageAction!leaveWordJspGetAllWords">留言板</a></li>
-		        <li><a href="#">联系</a></li>
+		        <li><a href="contact.jsp">联系</a></li>
 		        <li><a href="pictureAction!pictureGroupJspGetAllGroups">相册</a></li>
 		      </ul>
 		    </div><!-- /.navbar-collapse -->
