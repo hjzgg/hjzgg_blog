@@ -66,7 +66,7 @@
 		
 		<div class="row">
 			<div class="col-xs-6 col-md-4">
-				<h3 class="catListTitle">我的形象</h3>
+				<h3 class="catListTitle">自我简介</h3>
 				<div class="panel panel-default">
 				  <div class="panel-body">
 				  		<div style="width:70%; height:100px;float:left; display: table;">
@@ -74,9 +74,9 @@
 					  			<b>越努力，越幸运！</b>
 					  			<br>
 					  			<p style="text-indent:60%;">---胡峻峥</p>
+					  			<p><a href="hjzggResume.html"><b>我的简历1</b></a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="hjzggResume2.html"><b>我的简历2</b></a></p>
 				  			 </div>
 				  		</div>
-				  		
 				  		<div style="width:30%; float:left;">
 				    		<img src="image/hjzgg.jpg" title="我的形象" class="img-responsive img-circle blog-img" >
 				    	</div>

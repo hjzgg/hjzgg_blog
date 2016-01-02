@@ -9,6 +9,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 
 import com.blog.entriy.MyPicture;
+import com.blog.entriy.PictureComment;
 import com.blog.entriy.PictureGroup;
 
 public class PictureDao implements Serializable{
@@ -156,6 +157,22 @@ public class PictureDao implements Serializable{
 			session = this.getSession();
 			tran = session.beginTransaction();
 			session.delete(myPicture);
+			tran.commit();
+		} catch(Exception e){
+			System.out.println(e.toString());
+			tran.rollback();
+			return e.toString();
+		}
+		return null;
+	}
+	
+	public String newPicturesComment(PictureComment pictureComment){
+		Session session = null;
+		Transaction tran = null;
+		try{
+			session = this.getSession();
+			tran = session.beginTransaction();
+			session.persist(pictureComment);
 			tran.commit();
 		} catch(Exception e){
 			System.out.println(e.toString());

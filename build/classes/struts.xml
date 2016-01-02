@@ -79,6 +79,7 @@
 			<result name="pictureRenameGroup" type="redirect">/operationsMessage/operationsTip.jsp</result>
 			<result name="pictureGroupJspGetAllGroups">/pictureGroup.jsp</result>
 			<result name="pictureJspGetOneGroup">/picture.jsp</result>
+			<result name="newPictureComment" type="redirect">/operationsMessage/operationsTipAjax.jsp</result>
 			<result name="deletePictureGrouop" type="redirect">/operationsMessage/operationsTipAjax.jsp</result>
 			<result name="errors" type="redirect">/errorsMessage/errorsTipAjax.jsp</result>
 			<result name="errors_x" type="redirect">/errorsMessage/errorsTip.jsp</result>

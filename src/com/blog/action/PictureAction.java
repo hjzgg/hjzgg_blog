@@ -4,10 +4,13 @@ import java.sql.Timestamp;
 import java.util.List;
 
 import com.blog.actionForm.PictrueGroupForm;
+import com.blog.actionForm.PictureCommentForm;
 import com.blog.dao.BlogDao;
 import com.blog.dao.PictureDao;
+import com.blog.entriy.ArticleComment;
 import com.blog.entriy.BlogGroup;
 import com.blog.entriy.MyPicture;
+import com.blog.entriy.PictureComment;
 import com.blog.entriy.PictureGroup;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
@@ -180,5 +183,33 @@ public class PictureAction extends ActionSupport{
 			return "errors_x";
 		}  
 		return "pictureRenameGroup";
+	}
+	
+	PictureCommentForm pictureCommentForm;
+	public PictureCommentForm getPictureCommentForm() {
+		return pictureCommentForm;
+	}
+	public void setPictureCommentForm(PictureCommentForm pictureCommentForm) {
+		this.pictureCommentForm = pictureCommentForm;
+	}
+
+	public String newPictureComment(){
+		PictureGroup pictureGroup = null;
+		try{
+			int gd = Integer.parseInt(pictureCommentForm.getGroupId());
+			pictureGroup = pictureDao.pictureJspGetOneGroup(gd);
+			if(pictureGroup == null) throw new NullPointerException();
+			PictureComment comment = new PictureComment();
+			comment.setCommentContent(pictureCommentForm.getPictureCommentContent());
+			comment.setCommentTime(new Timestamp(System.currentTimeMillis()));
+			comment.setCommentPeopleContact(pictureCommentForm.getCommentPeopleContact());
+			comment.setGroup(pictureGroup);
+			String msg = pictureDao.newPicturesComment(comment);
+			ActionContext.getContext().getSession().put("operations", msg==null ? "评论成功!" : "评论失败: "+msg+" 异常位置：pictureAction!newPicturesComment。");
+		} catch (Exception e){
+			ActionContext.getContext().getSession().put("errors", "评论失败: "+e.toString() + " 异常位置：pictureAction!newPicturesComment。");
+			return "errors";
+		}
+		return "newPictureComment";
 	}
 }

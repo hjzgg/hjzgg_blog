@@ -1,0 +1,201 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<style type="text/css">
+			body { margin: 0; text-align:center; background:#EFF4FF url(images_hjzgg/body_bg.jpg) repeat-x fixed;}
+			div { font:14px Arial, Helvetica, sans-serif; letter-spacing:1px;}
+			h2 { display:none;}
+			h3 { font:bold 15px "Times New Roman", Times, serif; color:#A0410D; letter-spacing:2px; }
+			ol { margin:0; padding:70px 30px 0 50px; list-style:none; }
+			a:link { color:#598527; text-decoration:none;}
+			a:hover { color:#598527; text-decoration:underline;}
+			a:visited { color:#598527; text-decoration:none;}
+			#header,#general,#objective,#skillareas,#history,#awards,#lastModified,#copyright
+			{ margin:0 auto; width:700px; text-align:left; padding:15px 0px; border:1px solid #CCDCF7; border-width:0 1px; }
+			#header { height:168px; padding:0; background:#ffffff url(images_hjzgg/top.jpg) no-repeat center top; border:1px solid #CCDCF7; border-bottom:0px }
+			#header #title { display:none;}
+			#general { background:#ffffff url(images_hjzgg/general_bg.gif) no-repeat 85% bottom;}
+			#general .row { margin:0px 45px; padding:13px 0 2px 10px; border-bottom:1px dashed #cccccc; }
+			#realname,#titlename,#birthday,#phone,#mobile,#email,#homepage,#im
+			{ width:100px; font: bold 14px Arial, Helvetica, sans-serif; color:#A0410D; text-align:right; }
+			#objective { background:#ffffff url(images_hjzgg/objective_bg.gif) no-repeat 85% bottom;}
+			#objective p { padding:80px 0 0 45px;letter-spacing:2px; color:#A0410D; background:url(images_hjzgg/objective.gif) no-repeat 20px top;}
+			#skillareas { background:#ffffff url(images_hjzgg/skillareas_bg.gif) no-repeat 85% bottom; }
+			#skillareas ol { padding-top:50px; background:url(images_hjzgg/skillareas.gif) no-repeat 20px top; }
+			#skillareas ol .skill { padding-top:20px; }
+			#skillareas ol .skill .skillset{ margin:0px; padding-left:20px;  list-style:url(images_hjzgg/li.gif);}
+			#skillareas ol .skill .skillset li { line-height:200%; border-bottom:1px dashed #cccccc; }
+			#history { background:#ffffff url(images_hjzgg/history_bg.gif) no-repeat 85% 85%; }
+			#history ol { background:url(images_hjzgg/history.gif) no-repeat 20px top; }
+			#history div { line-height:200%; border-bottom:1px dashed #cccccc; }
+			#awards { background:#ffffff url(images_hjzgg/awards_bg.gif) no-repeat 85% bottom; }
+			#awards ol { background:url(images_hjzgg/awards.gif) no-repeat 20px top;}
+			#awards div,#awards p { line-height:200%; border-bottom:1px dashed #cccccc;}
+			#lastModified { text-align:center; font-size:12px; color:#A0410D; background:#ffffff; }
+			#copyright { height:150px; font-size:12px; color:#A0410D; text-align:center;
+			border:1px solid #CCDCF7; border-top:0; background:#ffffff url(images_hjzgg/bottom.jpg) no-repeat center bottom;}
+			
+			.my_photo{float:right; width:95px; height:150px; margin-right:45px; margin-top:10px; text-align:center;}
+			.my_location{width:150px; height:150px; position:fixed; right:140px; bottom:35px; background-color:#BFD3F4;}
+			.my_location .my_pos{ margin:0px; padding-left:20px;  list-style:url(images_hjzgg/li.gif);}
+			.my_location .my_pos li { line-height:200%; border-bottom:1px dashed #cccccc; text-align:left; cursor: pointer;}
+		</style>
+	</head>
+	<body>
+		<div class="my_location">
+			<ul class="my_pos">
+				<li onclick="javascript:document.getElementById('general').scrollIntoView();">个人信息</li>
+				<li onclick="javascript:document.getElementById('objective').scrollIntoView();">求职意向</li>
+				<li onclick="javascript:document.getElementById('skillareas').scrollIntoView();">技能</li>					
+				<li onclick="javascript:document.getElementById('history').scrollIntoView();">学历及项目经验</li>								
+				<li onclick="javascript:document.getElementById('awards').scrollIntoView();">所获奖项</li>								
+			</ul>
+		</div>
+		
+		<div id="header">		 
+		<div id="header">		 
+		</div>
+		<div id="general">
+			<div class="my_photo">
+			   我的形象
+			   <br><br>
+			   <img src="images_hjzgg/hjzgg.jpg" style="width:95px ; height:150px"></img>
+			</div>
+			<div class="row">
+				<label id="realname">姓名: </label>
+				<label id="realnameValue">胡峻峥</label>
+			</div>
+			<div class="row">
+				<label id="titlename">常用称谓: </label>
+				<label id="titleValue">hjzgg</label>
+			</div>
+			<div class="row">
+				<label id="birthday">生日: </label>
+				<label id="birthdayValue">1993年11月05日</label>
+			</div>
+			<div class="row">
+				<label id="phone">电话: </label>
+				<label id="phoneValue">15670637914</label>
+			</div>
+			<div class="row">
+				<label id="email">电子邮件: </label>
+				<label id="emailValue">2570230521@qq.com; 15670637914@163.com</label>
+			</div>
+			<div class="row">
+				<label id="homepage">主页: </label>
+				<label id="homepageValue">
+					<a href="http://www.cnblogs.com/hujunzheng/" title="我的主页">我的主页</a>
+				</label>
+			</div>
+			<div class="row">
+				<label id="im">即时通迅: </label>
+				<label id="imValue">QQ:2570230521</label>
+			</div>
+		</div>
+		<div id="objective">
+			<h2>求职意向</h2>
+			<p>寻一份互联网相关专职工作。</p>
+		</div>
+		<div id="skillareas">
+			<h2>技能</h2>
+			<ol>
+				<li class="skill">
+					<h3>c/c++</h3>
+					<ul class="skillset">
+						<li>能熟练的用c/c++语言编写程序</li>
+						<li>尝试过c语言的多线程编程</li>
+						<li>掌握c++基本容器，模板的使用</li>						
+						<li>了解windows编程以及c++的MFC</li>
+					</ul>
+				</li>
+				<li class="skill">
+					<h3>java</h3>
+					<ul class="skillset">
+						<li>学习过Android编程，并做过小型APP</li>
+						<li>熟练利用javase的Swing或者AWT进行图形界面开发</li>
+						<li>熟练利用javaee进行网站的开发</li>
+						<li>掌握mvc开发思想，以及s2sh框架的使用</li>
+					</ul>
+				</li>
+				<li class="skill">
+					<h3>html, css, js</h3>
+					<ul class="skillset">
+						<li>基本了解html, 能利用css进行布局以及简单样式的设置</li>
+						<li>了解jQuery一些简单的用法，能用js实现一些网页动态效果</li>
+						<li>掌握ajax技术，简单了解json</li>
+					</ul>
+				</li>
+				<li class="skill">
+					<h3>开发工具</h3>
+					<ul class="skillset">
+						<li>java: Eclipse, Myeclipse, NetBeans</li>
+						<li>c/c++: Dev c++, VC, VS2012</li>
+						<li>数据库: SQLite, Mysql, navicat, PowerDesigner</li>
+						<li>网页: dreamweaver, codepen, Notepad++</li>
+					</ul>
+				</li>
+			</ol>
+		</div>
+		<div id="history">
+			<h2>学历及项目经验</h2>
+			<ol>
+				<li class="education">
+					<h3>教育背景</h3>
+					<div class="content" >学历：本科</div>
+					<div class="content" >毕业时间： 2016年8月</div>
+					<div class="content" >学校： 郑州大学</div>
+					<div class="content" >院系： 信息工程学院</div>
+					<div class="content" >专业： 计算机科学与技术</div>
+					<div class="content" >专业排名： 前10%</div>
+				</li>
+				
+				<li class="education">
+					<h3>项目经历</h3>
+					<div class="content" >1.在线软件工程项目开发（s2sh框架）</div> 
+					<div class="content" >2.网上购物商城（jsp，mysql，mvc模式）</div>  
+					<div class="content" >3.java塔克大战</div>  
+					<div class="content" >4.android坦克大战</div>  
+					<div class="content" >5.c语言游戏（贪吃蛇，俄罗斯方块）</div>  
+					<div class="content" >6.c++(mfc)汉诺塔游戏，棋盘覆盖游戏</div> 
+				</li>
+
+				<li class="education">
+					<h3>活动经历</h3>
+					<div class="content" >1.曾担任班级团支书，锻炼自己的人际交往能力。</div>
+					<div class="content" >2.2014年12月，组织郑州大学ACM程序设计比赛，并命题。</div>
+					<div class="content" >3.于2015年5月20日在西安行知汇元软件开发有限公司进行实习。</div>
+				</li>
+				
+				<li class="education">
+					<h3>参考信息</h3>
+					<div class="content" >英语四级：487</div>
+					<div class="content" >英语六级：387</div> 
+				</li>
+			</ol>
+		</div>
+		<div id="awards">
+			<h2>所获奖项</h2>
+			<ol>
+				<li class="award">
+					<h3>编程比赛</h3>
+					<div class="content" >1.2013年5月 第六届河南省程序设计大赛银奖</div>
+					<div class="content" >2.2014年5月，参加学校ACM程序设计竞赛，获得一等奖</div> 
+                    <div class="content" >3.2014年5月 第七届河南省程序设计大赛银奖</div> 
+					<div class="content" >4.2014年10月，参加ACM程序设计竞赛亚洲区西安站比赛，获得优秀奖</div> 					
+					<div class="content" >5.2015年5月 第八届河南省程序设计大赛银奖</div> 
+					<div class="content" >6.2015年5月 第六届蓝桥杯大赛决赛二等奖</div>
+				</li>
+				
+				<li class="award">					
+					<h3>奖学金</h3>
+					<div class="content" >1.2012至2013学年度获得国家励志奖学金 </div>
+					<div class="content" >2.2013至2014学年度获得国家励志奖学金 </div>
+				</li>
+			</ol>
+		</div>
+		<div id="lastModified">Last Modified: 2015年11月</div>
+		<div id="copyright">&copy; 2015 胡峻峥</div>
+	</body>
+</html> 

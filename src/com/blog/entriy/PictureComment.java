@@ -31,4 +31,45 @@ public class PictureComment implements Serializable{
 	@ManyToOne(targetEntity=PictureGroup.class)
 	@JoinColumn(name="groupId", referencedColumnName="groupId", nullable=false)
 	private PictureGroup group;
+
+	public int getCommentId() {
+		return commentId;
+	}
+
+	public void setCommentId(int commentId) {
+		this.commentId = commentId;
+	}
+
+	public String getCommentContent() {
+		return commentContent;
+	}
+
+	public void setCommentContent(String commentContent) {
+		this.commentContent = commentContent;
+	}
+
+	public String getCommentPeopleContact() {
+		return commentPeopleContact;
+	}
+
+	public void setCommentPeopleContact(String commentPeopleContact) {
+		this.commentPeopleContact = commentPeopleContact;
+	}
+
+	public Timestamp getCommentTime() {
+		return commentTime;
+	}
+
+	public void setCommentTime(Timestamp commentTime) {
+		this.commentTime = commentTime;
+	}
+
+	public PictureGroup getGroup() {
+		return group;
+	}
+
+	public void setGroup(PictureGroup group) {
+		this.group = group;
+	}
+	
 }

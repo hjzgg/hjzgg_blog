@@ -87,6 +87,41 @@
 				</div>
 		  </div>
 		</div>
+		<div class="panel panel-default blog-panel" id="commentsList">
+			  <div class="blog-panel-heading">																		
+			    	<h3 class="panel-title"><span class="glyphicon glyphicon-road" aria-hidden="true"></span>&nbsp;&nbsp;评论列表</h3>
+			  </div>
+			  <div class="panel-body" style="max-height: 400px; overflow: auto;">
+				  <c:forEach var="comment" items="${session.pictureJspGetOneGroup.comments}" varStatus="status">
+					  <div class="panel-body">
+					  		<div class="panel panel-success" style="margin-bottom: 0px;">
+					  			<div class="panel-heading">
+					  				<a name="${status.count}F">#${status.count}楼 </a> &nbsp; &nbsp; ${comment.commentTime} &nbsp; &nbsp; <a href="javascript:void(0)" onclick="replay('${status.count}')">回复</a>
+					  			</div>
+					  			<div class="panel-body">
+					  				${comment.commentContent}
+					  			</div>
+					  		</div>
+					  </div>
+				  </c:forEach>
+				</div>
+		</div>
+		<form action="#" method="post" id="newPictureCommentForm">
+    		<input type="hidden" name="pictureCommentForm.groupId" value="${session.pictureJspGetOneGroup.groupId}"/>
+	    	<div class="panel panel-default blog-panel">
+				  <div class="blog-panel-heading">																		
+				    <h3 class="panel-title"><span class="glyphicon glyphicon-globe" aria-hidden="true"></span>&nbsp;&nbsp;欢迎评论</h3>
+				  </div>
+				  <div class="input-group input-group-lg" style="margin-left: 12px; margin-right: 10px; margin-top: 10px;">
+					  	<span class="input-group-addon" id="sizing-addon1">联系方式(if convenient):</span>
+					  	<input type="text" class="form-control" name="pictureCommentForm.commentPeopleContact" placeholder="your e-mail" aria-describedby="sizing-addon1">
+				  </div>
+				  <div class="panel-body" style="padding-left: 20%;">
+		  	 			<jsp:include page="./umeditor/index.html" flush="true"/>
+				  </div>
+				  <center><button type="button" class="btn btn-info" onclick="formAppendSubmit();">提交评论</button></center>
+			</div>
+		</form>
 	</div>
 	
 	<!-- Modal 模态对话框-->
@@ -170,4 +205,37 @@
 	</div>
 		
 </body>
+<script type="text/javascript">
+	
+	function formAppendSubmit(){
+		var myform=$('#newPictureCommentForm'); 
+		var tmpInput=$("<input type='text' name='pictureCommentForm.pictureCommentContent'/>");
+		if(!hasContent()){
+			alert("请输入内容！");
+			return ;
+		}
+		tmpInput.attr("value", getContent()); 
+		myform.append(tmpInput);
+		
+		$.ajax({
+		    type:"post",
+		    url: "pictureAction!newPictureComment",
+		    data: myform.serialize(),
+		    success:
+		        function(dataResponses){
+		            $("#operationMsgDivTwo")[0].innerHTML = dataResponses;
+		            $("#operationMsgDivOne")[0].style.display = "";
+		        },
+		    error:
+		        function(dataResponses){
+		    		alert("操作失败:" + dataResponses);
+		        }
+		});
+	}
+	function replay(floor){
+		setContent("<b>回复  <span style='text-decoration:underline; color:red; cursor:pointer' onclick='location.href=\"#"+floor+"F\"'>#"+floor+"楼 </span>:<b/>", false);
+		setContent("<p>&nbsp;&nbsp;&nbsp;&nbsp;</p>", true);
+		window.scrollTo(0,document.body.scrollHeight);
+	}
+</script>
 </html>

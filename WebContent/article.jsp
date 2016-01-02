@@ -142,22 +142,24 @@
 				    </label>
 		    	</c:forEach>
 		    	
-		    	<div class="panel panel-default blog-panel" style="max-height: 800px; overflow: auto;" id="commentsList">
+		    	<div class="panel panel-default blog-panel" id="commentsList">
 					  <div class="blog-panel-heading">																		
 					    	<h3 class="panel-title"><span class="glyphicon glyphicon-road" aria-hidden="true"></span>&nbsp;&nbsp;评论列表</h3>
 					  </div>
-					  <c:forEach var="comment" items="${session.articleJspGetOneArticle.comments}" varStatus="status">
-						  <div class="panel-body">
-						  		<div class="panel panel-success" style="margin-bottom: 0px;">
-						  			<div class="panel-heading">
-						  				<a name="${status.count}F">#${status.count}楼 </a> &nbsp; &nbsp; ${comment.commentTime} &nbsp; &nbsp; <a href="javascript:void(0)" onclick="replay('${status.count}')">回复</a>
-						  			</div>
-						  			<div class="panel-body">
-						  				${comment.commentContent}
-						  			</div>
-						  		</div>
-						  </div>
-					  </c:forEach>
+					  <div class="panel-body" style="max-height: 800px; overflow: auto;">
+						  <c:forEach var="comment" items="${session.articleJspGetOneArticle.comments}" varStatus="status">
+							  <div class="panel-body">
+							  		<div class="panel panel-success" style="margin-bottom: 0px;">
+							  			<div class="panel-heading">
+							  				<a name="${status.count}F">#${status.count}楼 </a> &nbsp; &nbsp; ${comment.commentTime} &nbsp; &nbsp; <a href="javascript:void(0)" onclick="replay('${status.count}')">回复</a>
+							  			</div>
+							  			<div class="panel-body">
+							  				${comment.commentContent}
+							  			</div>
+							  		</div>
+							  </div>
+						  </c:forEach>
+					  </div>
 				</div>
 				
 		    	<form action="#" method="post" id="newArticleCommentForm">
