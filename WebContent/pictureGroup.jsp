@@ -233,7 +233,7 @@
 							 			<a href="javascript:void(0)" class="thumbnail" style="width:50px;">
 							 			<c:choose>
 							 				<c:when test="${fn:length(group.pictures) > 0}">
-							 					<c:forEach var="myPicture" items="${group.pictures}" begin="1" end="1">
+							 					<c:forEach var="myPicture" items="${group.pictures}" begin="0" end="0">
 				  									<img src="${myPicture.picturePath}" alt="${group.groupName}" title="${group.groupName}" height="50" width="50">
 							 					</c:forEach>
 							 				</c:when>
